@@ -6,7 +6,8 @@ let runTimeCache = {}
 export const weatherService = {
     query,
     getByCity,
-    getCities
+    getCities,
+    getCityByIp
 }
 
 async function query(city) {
@@ -98,6 +99,22 @@ async function getCities(query) {
             name: city.name,
             country: city.country
         }))
+    } catch (err) {
+        console.error('Failed to get city search suggestions:', err)
+        throw err
+    }
+}
+
+async function getCityByIp(ip) {
+    try {
+        const res = await axios.get(`${WEATHER_API_URL}/current.json`, {
+            params: {
+                key: process.env.WEATHER_API_KEY,
+                q: ip,
+                aqi: 'no',
+            }
+        })
+        return res.data
     } catch (err) {
         console.error('Failed to get city search suggestions:', err)
         throw err
