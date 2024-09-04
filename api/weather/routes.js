@@ -1,8 +1,8 @@
 import express from 'express'
 import { log } from '../../middleware/logger.middleware.js'
-import { query } from './controller.js'
+import { getByCity, query } from './controller.js'
 
 export const weatherRoutes = express.Router()
 
-weatherRoutes.get('/', log, query)
-
+weatherRoutes.get('/search', log, query)
+weatherRoutes.get('/forecast', log, getByCity)
