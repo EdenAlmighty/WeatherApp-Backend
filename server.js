@@ -1,14 +1,13 @@
 import 'dotenv/config'
 import http from 'http'
 import express from 'express'
-import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import path from 'path';
+
 import { fileURLToPath } from 'url'
-
-
 import { weatherRoutes } from './api/weather/routes.js'
 import { logger } from './services/logger.service.js'
+
 logger.info('server.js loaded...')
 
 const __filename = fileURLToPath(import.meta.url)
@@ -17,7 +16,6 @@ const __dirname = path.dirname(__filename)
 const app = express()
 const server = http.createServer(app)
 
-app.use(cookieParser())
 app.use(express.json())
 app.use(express.static('public'))
 app.set('trust proxy', true)

@@ -1,7 +1,7 @@
 import axios from 'axios'
+import { checkCache, setCache } from '../../middleware/cache.middleware.js'
 
 const WEATHER_API_URL = 'http://api.weatherapi.com/v1'
-let runTimeCache = {}
 
 export const weatherService = {
     query,
@@ -12,10 +12,12 @@ export const weatherService = {
 
 async function query(city) {
     const cityUpper = city.toUpperCase()
-    console.log('cityUpper: ', cityUpper)
 
-    if (runTimeCache[cityUpper]) {
-        return formatWeatherData(runTimeCache[cityUpper])
+    // Check cache before attempting API call
+    const cachedData = checkCache(cityUpper)
+    if (cachedData) {
+        console.log('From cache')
+        return formatWeatherData(cachedData)
     }
 
     try {
@@ -30,7 +32,7 @@ async function query(city) {
         })
 
         const weatherData = res.data
-        runTimeCache[cityUpper] = weatherData
+        setCache(cityUpper, weatherData)
 
         return formatWeatherData(weatherData)
     } catch (err) {
@@ -79,8 +81,9 @@ function formatWeatherData(data) {
 async function getByCity(cityName) {
     const cityUpper = cityName.toUpperCase()
 
-    if (runTimeCache[cityUpper]) {
-        return formatWeatherData(runTimeCache[cityUpper])
+    const cachedData = checkCache(cityUpper)
+    if (cachedData) {
+        return formatWeatherData(cachedData)
     }
 
     return await query(cityName)
@@ -116,7 +119,7 @@ async function getCityByIp(ip) {
         })
         return res.data
     } catch (err) {
-        console.error('Failed to get city search suggestions:', err)
+        console.error('Failed to get city data by IP:', err)
         throw err
     }
 }

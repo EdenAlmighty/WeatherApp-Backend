@@ -1,3 +1,4 @@
+import { logger } from '../../services/logger.service.js'
 import { weatherService } from './service.js'
 
 export async function query(req, res) {
@@ -6,7 +7,7 @@ export async function query(req, res) {
         const cities = await weatherService.getCities(searchValue)
         res.send(cities)
     } catch (err) {
-        console.error('Failed to get city suggestions:', error)
+        logger.error('Failed to get city suggestions:', err)
         res.status(500).send({ error: 'Failed to get city suggestions' })
     }
 }
@@ -17,7 +18,7 @@ export async function getByCity(req, res) {
         const weatherData = await weatherService.query(cityName)
         res.send(weatherData)
     } catch (err) {
-        console.error('Failed to get weather data:', error)
+        logger.error('Failed to get weather data:', err)
         res.status(500).send({ error: 'Failed to get weather data' })
     }
 }
@@ -29,7 +30,7 @@ export async function getCities(req, res) {
         const cities = await weatherService.getCities(searchValue)
         res.send(cities)
     } catch (err) {
-        console.error('Failed to get city search suggestions:', err)
+        logger.error('Failed to get city search suggestions:', err)
         res.status(500).send({ err: 'Failed to get city search suggestions' })
     }
 }
@@ -38,12 +39,10 @@ export async function getCities(req, res) {
 export async function getCityByIp(req, res) {
     try {
         const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress || '82.187.114.94'
-        console.log('ip: ', ip);
-        
         const weatherData = await weatherService.getCityByIp(ip)
         res.send(weatherData)
     } catch (err) {
-        console.error('Failed to get city search suggestions:', err)
+        logger.error('Failed to get city search suggestions:', err)
         res.status(500).send({ err: 'Failed to get city search suggestions' })
     }
 }
