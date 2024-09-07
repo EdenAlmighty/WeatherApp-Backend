@@ -42,18 +42,20 @@ async function query(city) {
 }
 
 function formatWeatherData(data) {
+    console.log({data});
+    
     const {
         location: {
-            name: cityName = 'Unknown City',
-            country = 'Unknown Country',
-            localtime_epoch: localTime = 0 } = {},
+            name: cityName,
+            country,
+            localtime_epoch: localTime} = {},
 
         current: {
-            temp_c: temperature = 30,
-            humidity = 30,
-            precip_mm: precipitation = 0,
-            condition: { text: description = 'rainy' } = {},
-            wind_kph: windSpeed = 30 } = {},
+            temp_c: temperature,
+            humidity,
+            precip_mm: precipitation,
+            condition: { text: description} = {},
+            wind_kph: windSpeed } = {},
 
         forecast: { forecastday = [] } = {}
     } = data || {}
